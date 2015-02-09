@@ -31,6 +31,19 @@ object LiftedDao extends Dao with DbProvider {
     query _
   }
 
+  def fetchSalesWithoutSlickJoin(minTotal: BigDecimal): List[SaleRecord] = db.withSession { implicit session =>
+    val query = for (sale <- sales;
+         purchaser <- purchasers;
+         product <- products;
+         supplier <- suppliers;
+         if (sale.productId === product.id &&
+          sale.purchaserId === purchaser.id &&
+          product.supplierId === supplier.id))
+      yield (purchaser.name, supplier.name, product.name, sale.total)
+
+    query.filter(_._4 >= minTotal).list.map(SaleRecord.tupled)
+  }
+
 
   def fetchSales(minTotal: BigDecimal): List[SaleRecord] = db.withSession { implicit session =>
     salesQuery(minTotal).list.map(SaleRecord.tupled)
@@ -67,4 +80,9 @@ object LiftedDao extends Dao with DbProvider {
     purchasers.delete
     suppliers.delete
   }
+}
+
+object LiftedWithoutJoinDao extends Dao with DbProvider {
+
+  def fetchSales(minTotal: BigDecimal): Seq[SaleRecord] = LiftedDao.fetchSalesWithoutSlickJoin(minTotal)
 }

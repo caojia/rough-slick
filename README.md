@@ -9,7 +9,7 @@ sbt run
 then choose the main class:
 
 * `io.scalac.slick.Main` - just a playground
-* `io.scalac.slick.JoinPerfTest` - a test comparing performance of a query with multiple joins defined in Slick DSL vs Plain SQL.
+* `io.scalac.slick.JoinPerfTest` - a test comparing performance of a query with multiple joins defined in Slick DSL vs Slick DSL without JOIN vs Plain SQL.
 
 ### Prerequisities
 

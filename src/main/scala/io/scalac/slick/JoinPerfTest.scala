@@ -3,7 +3,7 @@ package io.scalac.slick
 
 import ch.qos.logback.classic.{Level, Logger}
 import com.typesafe.config.ConfigFactory
-import io.scalac.slick.db.{PlainDao, Dao, LiftedDao}
+import io.scalac.slick.db.{PlainDao, Dao, LiftedDao, LiftedWithoutJoinDao}
 import org.slf4j.LoggerFactory
 
 import scala.util.Random
@@ -55,10 +55,12 @@ object JoinPerfTest extends App {
   }
 
   fillData()
-  val liftedMillis = testIt(LiftedDao)
   val plainMillis = testIt(PlainDao)
+  val liftedWithoutJoinMillis = testIt(LiftedWithoutJoinDao)
+  val liftedMillis = testIt(LiftedDao)
 
   println("Lifted Embedding: %4.2f s".format(liftedMillis / 1000.0))
+  println("Lifted Embedding Without Join: %4.2f s".format(liftedWithoutJoinMillis / 1000.0))
   println("Plain SQL:        %4.2f s".format(plainMillis / 1000.0))
 
 }
